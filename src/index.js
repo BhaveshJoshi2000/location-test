@@ -1,11 +1,19 @@
 import * as THREE from "three";
-import * as THREEx from "../node_modules/@ar-js-org/ar.js/three.js/build/ar-threex-location-only.js";
+import * as THREEx from "@ar-js-org/ar.js/three.js/build/ar-threex-location-only";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { KTX2Loader } from "three/addons/loaders/KTX2Loader.js";
+import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
+
+const loader = new GLTFLoader();
 
 function main() {
   const canvas = document.getElementById("canvas1");
 
   const debug = document.getElementById("debug");
   const scene = new THREE.Scene();
+  const light = new THREE.AmbientLight(); // soft white light
+  scene.add(light);
+
   const camera = new THREE.PerspectiveCamera(60, 1.33, 0.1, 10000);
   const renderer = new THREE.WebGLRenderer({ canvas: canvas });
 
@@ -20,12 +28,10 @@ function main() {
     camera
   );
 
-  const first = true;
+  let first = true;
   arjs.on("gpsupdate", (pos) => {
     if (first) {
       setupObjects(pos.coords.longitude, pos.coords.latitude);
-      alert("gps detected");
-      console.log("gps detected");
       first = false;
     }
   });
@@ -36,15 +42,18 @@ function main() {
   // 12.956798781270836, 80.24751979974918;
 
   function setupObjects(longitude, latitude) {
-    const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-
-    // arjs.add(new THREE.Mesh(geom, material), longitude, latitude + 0.001); // slightly north
-
-    arjs.add(
-      new THREE.Mesh(geom, material),
-      80.24751979974918,
-      12.956798781270836
-    ); // slightly north
+    loader.load(
+      "src/models/map_pointer.gltf",
+      function (gltf) {
+        console.log(gltf.scene);
+        gltf.scene.rotation.y += Math.PI / 2;
+        arjs.add(gltf.scene, 80.24751979974918, 12.956798781270836);
+      },
+      undefined,
+      function (error) {
+        console.error(error);
+      }
+    );
   }
 
   function render() {

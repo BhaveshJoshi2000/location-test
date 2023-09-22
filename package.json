@@ -12,9 +12,13 @@
   "license": "ISC",
   "dependencies": {
     "@ar-js-org/ar.js": "^3.4.5",
+    "copy-webpack-plugin": "^11.0.0",
     "http-server": "^14.1.1",
     "three": "^0.150.0",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4"
+  },
+  "devDependencies": {
+    "file-loader": "^6.2.0"
   }
 }
