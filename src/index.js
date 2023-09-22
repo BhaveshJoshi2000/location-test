@@ -158,12 +158,7 @@ function main() {
     // Use position of first GPS update (fake or real)
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
 
-    // 12.956831230087328, 80.24755612328052;
-    arjs.add(
-      new THREE.Mesh(geom, material),
-      12.956831230087328,
-      80.24755612328052
-    ); // slightly north
+    arjs.add(new THREE.Mesh(geom, material), longitude, latitude + 0.0001); // slightly north
   }
 
   requestAnimationFrame(render);
